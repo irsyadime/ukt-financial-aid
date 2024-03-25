@@ -19,6 +19,8 @@ public class UserCredential {
     private String username;
     @Column(name = "password")
     private String password;
+    @Column(name = "is_active")
+    private Boolean isActive;
     @ManyToOne
     @JoinColumn(name = "role_id")
     @JsonBackReference

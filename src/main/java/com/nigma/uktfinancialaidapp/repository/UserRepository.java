@@ -1,7 +1,6 @@
 package com.nigma.uktfinancialaidapp.repository;
 
 import com.nigma.uktfinancialaidapp.model.entity.User;
-import com.nigma.uktfinancialaidapp.model.response.UserResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,11 +16,12 @@ public interface UserRepository extends JpaRepository<User,String> {
     @Modifying
     @Transactional
     @Query(nativeQuery = true,
-    value = "INSERT INTO m_user(id,name,email,phone) values (" +
+    value = "INSERT INTO m_user(id,name,email,phone,user_credential_id) values (" +
             ":#{#user.id}, " +
             ":#{#user.name}, " +
             ":#{#user.email}, " +
-            ":#{#user.phone} " +
+            ":#{#user.phone}, " +
+            ":#{#user.userCredential.id} " +
             ")"
     )
     void insert(User user);

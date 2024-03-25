@@ -18,6 +18,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
     @Column(name = "role_name")
+    @Enumerated(EnumType.STRING)
     private ERole roleName;
     @OneToMany(mappedBy = "role")
     private List<UserCredential> userCredentials;
