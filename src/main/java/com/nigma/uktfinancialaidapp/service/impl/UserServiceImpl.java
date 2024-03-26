@@ -1,9 +1,11 @@
 package com.nigma.uktfinancialaidapp.service.impl;
 
 import com.nigma.uktfinancialaidapp.model.entity.User;
+import com.nigma.uktfinancialaidapp.model.entity.UserCredential;
 import com.nigma.uktfinancialaidapp.model.mapper.UserMapper;
 import com.nigma.uktfinancialaidapp.model.request.UserRequest;
 import com.nigma.uktfinancialaidapp.model.response.UserResponse;
+import com.nigma.uktfinancialaidapp.repository.UserCredentialRepository;
 import com.nigma.uktfinancialaidapp.repository.UserRepository;
 import com.nigma.uktfinancialaidapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +17,13 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final UserCredentialRepository userCredentialRepository;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
@@ -39,11 +43,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponse> getAllUser() {
         List<User> users = userRepository.findAllUser();
-        List<UserResponse> userResponses = new ArrayList<>();
-        for(User user:users){
-            userResponses.add(UserMapper.convertToDTO(user));
-        }
-        return userResponses;
+
+        return users.stream().map(UserMapper::convertToDTO).collect(Collectors.toList());
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -61,6 +62,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(String id) {
         User user = userRepository.findUserByid(id).orElse(null);
-        System.out.println("deleted");
+        UserCredential userCredential = userCredentialRepository.findById(user.getUserCredential().getId()).orElse(null);
+        userCredential.setIsActive(false);
     }
 }
