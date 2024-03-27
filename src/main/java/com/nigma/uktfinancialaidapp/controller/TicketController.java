@@ -11,6 +11,7 @@ import com.nigma.uktfinancialaidapp.service.TicketService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class TicketController {
     }
 
     @PutMapping("/{id}/approve")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<?> approveTicket(@PathVariable String id, @RequestBody UpdateTicketRequest request){
         TicketResponse response = ticketService.acceptTicket(request,id);
         CommonResponse<TicketResponse> commonResponse = CommonResponse.<TicketResponse>builder()
@@ -44,6 +46,7 @@ public class TicketController {
     }
 
     @PutMapping("/{id}/reject")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<?> rejectTicket(@PathVariable String id, @RequestBody UpdateTicketRequest request){
         RejectedTicketResponse response = ticketService.rejectTicket(request,id);
         CommonResponse<RejectedTicketResponse> commonResponse = CommonResponse.<RejectedTicketResponse>builder()
