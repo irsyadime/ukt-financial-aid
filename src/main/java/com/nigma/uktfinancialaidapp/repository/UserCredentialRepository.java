@@ -11,7 +11,13 @@ import java.util.Optional;
 
 @Repository
 public interface UserCredentialRepository extends JpaRepository<UserCredential,String> {
+
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM m_user_credential WHERE username = :username")
     Optional<UserCredential> findByUsername(String username);
+
+    @Query(nativeQuery = true,
+            value = "SELECT * FROM m_user_credential WHERE id = :id")
     Optional<UserCredential> findById(String id);
 
     @Modifying

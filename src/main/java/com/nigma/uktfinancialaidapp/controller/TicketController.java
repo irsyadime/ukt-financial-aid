@@ -2,6 +2,7 @@ package com.nigma.uktfinancialaidapp.controller;
 
 import com.nigma.uktfinancialaidapp.constant.AppPath;
 import com.nigma.uktfinancialaidapp.model.entity.Ticket;
+import com.nigma.uktfinancialaidapp.model.request.TicketRequest;
 import com.nigma.uktfinancialaidapp.model.request.UpdateTicketRequest;
 import com.nigma.uktfinancialaidapp.model.response.CommonResponse;
 import com.nigma.uktfinancialaidapp.model.response.RejectedTicketResponse;
@@ -21,8 +22,8 @@ public class TicketController {
     private final TicketService ticketService;
 
     @PostMapping
-    public ResponseEntity<?> createTicket(@RequestBody Ticket ticket){
-        TicketResponse response = ticketService.createTicket(ticket);
+    public ResponseEntity<?> createTicket(@RequestBody TicketRequest request){
+        TicketResponse response = ticketService.createTicket(request);
         CommonResponse<TicketResponse> commonResponse = CommonResponse.<TicketResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
                 .message("Success create ticket")

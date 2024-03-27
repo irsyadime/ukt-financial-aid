@@ -10,8 +10,9 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateTicketRequest {
-    private String ticketId;
-    private EAidType aidProvided;
-    private Long uktFundProvided;
+public class TicketRequest {
+    private String userId;
+    private EAidType aidRequest;
+    private Long totalUKT;
+    private String campusName;
 }

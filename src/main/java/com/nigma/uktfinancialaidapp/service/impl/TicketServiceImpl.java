@@ -2,7 +2,10 @@ package com.nigma.uktfinancialaidapp.service.impl;
 
 import com.nigma.uktfinancialaidapp.constant.EAprovalStatus;
 import com.nigma.uktfinancialaidapp.model.entity.Ticket;
+import com.nigma.uktfinancialaidapp.model.entity.User;
 import com.nigma.uktfinancialaidapp.model.mapper.TicketMapper;
+import com.nigma.uktfinancialaidapp.model.mapper.UserMapper;
+import com.nigma.uktfinancialaidapp.model.request.TicketRequest;
 import com.nigma.uktfinancialaidapp.model.request.UpdateTicketRequest;
 import com.nigma.uktfinancialaidapp.model.response.RejectedTicketResponse;
 import com.nigma.uktfinancialaidapp.model.response.TicketResponse;
@@ -13,6 +16,7 @@ import com.nigma.uktfinancialaidapp.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -26,16 +30,26 @@ public class TicketServiceImpl implements TicketService {
     private final TicketRepository ticketRepository;
     private final UserService userService;
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
-    public TicketResponse createTicket(Ticket ticket) {
-        ticket.setId(UUID.randomUUID().toString());
-        ticket.setAprovalStatus(EAprovalStatus.PENDING);
+    public TicketResponse createTicket(TicketRequest request) {
+        UUID id = UUID.randomUUID();
+        User user = UserMapper.toEntity(userService.getById(request.getUserId()));
+        Ticket ticket = Ticket.builder()
+                .id(id.toString())
+                .createdAt(LocalDateTime.now())
+                .totalUkt(request.getTotalUKT())
+                .campusName(request.getCampusName())
+                .aidRequest(request.getAidRequest())
+                .aprovalStatus(EAprovalStatus.PENDING)
+                .user(user)
+                .build();
         ticketRepository.insert(ticket);
         return TicketResponse.builder()
                 .id(ticket.getId())
                 .totalUkt(ticket.getTotalUkt())
                 .campusName(ticket.getCampusName())
-                .createdAt(LocalDateTime.now())
+                .createdAt(ticket.getCreatedAt())
                 .aidRequest(ticket.getAidRequest())
                 .build();
     }
@@ -64,6 +78,7 @@ public class TicketServiceImpl implements TicketService {
         return tickets.stream().map(TicketMapper::convertToDTO).collect(Collectors.toList());
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public TicketResponse acceptTicket(UpdateTicketRequest request, String adminId) {
         Ticket ticket = ticketRepository.findTicketById(request.getId()).orElse(null);
@@ -77,7 +92,7 @@ public class TicketServiceImpl implements TicketService {
         ticketRepository.updateTicket(ticket);
         return TicketMapper.convertToDTO(ticket);
     }
-
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public RejectedTicketResponse rejectTicket(UpdateTicketRequest request, String adminId) {
         Ticket ticket = ticketRepository.findTicketById(request.getId()).orElse(null);
