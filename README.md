@@ -2,8 +2,7 @@
 
 A RESTful API built using Java Spring Boot and implement technologies such as Spring IoC, Java Stream, and SQL Native Query.
 
-The purpose of this application is to help student who struggle to pay their UKT. Student can make a ticket to the org that provide donation,
-then the org can choose whether to approve or reject request from student. This application has 2 types of users, namely student and admin.
+The purpose of this application is to help student who struggle to pay their UKT. This API can be used by any org that provide donation for student in need. Student then create ticket to ask for aid, admin org then can approve or reject ticket. This application has 2 types of users, namely student and admin.
 Only admin can do task to approve or reject request ticket.
 
 ### Technologies Used
