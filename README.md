@@ -21,3 +21,5 @@ Only admin can do task to approve or reject request ticket.
 4. *CRUD user*
 5. *Approve ticket*
 6. *Reject ticket*
+
+Here link for API Documentation: https://documenter.getpostman.com/view/32333063/2sA35Ea3GG
